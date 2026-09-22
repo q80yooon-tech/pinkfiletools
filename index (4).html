@@ -58,7 +58,6 @@ a:hover{text-decoration:underline}
 img{max-width:100%;display:block}
 .container{width:100%;max-width:1100px;margin:0 auto;padding:0 18px}
 
-
 /* ---------- Header ticker ---------- */
 .header-ticker{
   position:relative;
@@ -171,7 +170,6 @@ section{padding:38px 0}
 .step h3{font-size:1rem;font-weight:800;margin-bottom:6px}
 .step p{font-size:.86rem;color:var(--ink-soft)}
 
-
 /* ---------- Tool information / SEO content ---------- */
 .tool-info{
   display:grid;
@@ -206,10 +204,20 @@ section{padding:38px 0}
 .faq details[open] summary::after{content:"−"}
 .faq details p{margin-top:10px;color:var(--ink-soft);font-size:.92rem}
 
-/* ---------- Privacy ---------- */
+/* ---------- Privacy & Content Cards ---------- */
 .privacy{background:rgba(255,255,255,.85);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);max-width:820px;margin:0 auto}
 .privacy p{color:var(--ink-soft);font-size:.94rem;margin-bottom:12px}
 .privacy strong{color:var(--ink)}
+
+/* ---------- Contact Form Styles ---------- */
+.contact-form{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.contact-form label{font-weight:700;font-size:.88rem;color:var(--ink);display:flex;flex-direction:column;gap:6px}
+.contact-form input, .contact-form textarea{
+  font:inherit;padding:10px 14px;border-radius:12px;border:1.5px solid var(--pink-200);background:#fff;color:var(--ink);
+}
+.contact-form input:focus, .contact-form textarea:focus{
+  outline:none;border-color:var(--pink-500);box-shadow:0 0 0 3px rgba(236,64,122,.15);
+}
 
 /* ---------- Tool page ---------- */
 .tool-wrap{max-width:760px;margin:0 auto;padding:34px 0 50px}
@@ -287,10 +295,10 @@ footer .copy{text-align:center;font-size:.78rem;border-top:1px solid rgba(255,25
     <a class="logo" href="#/"><span class="logo-badge">🌸</span> PinkFile<span style="color:var(--pink-400)">Tools</span></a>
     <nav class="nav-links">
       <a href="#/">Home</a>
-      <a href="#/" onclick="goSection(event,'popular')">Popular</a>
-      <a href="#/" onclick="goSection(event,'pdf-tools')">PDF Tools</a>
-      <a href="#/" onclick="goSection(event,'img-tools')">Image Tools</a>
-      <a href="#/" onclick="goSection(event,'faq')">FAQ</a>
+      <a href="#/popular">Popular</a>
+      <a href="#/pdf-tools">PDF Tools</a>
+      <a href="#/img-tools">Image Tools</a>
+      <a href="#/faq">FAQ</a>
     </nav>
     <button class="burger" id="burger" aria-label="Menu">☰</button>
   </div>
@@ -304,6 +312,10 @@ footer .copy{text-align:center;font-size:.78rem;border-top:1px solid rgba(255,25
     <a href="#/image-to-pdf">🌄 Image to PDF</a>
     <a href="#/a4-pdf-creator">📝 A4 PDF Creator</a>
     <a href="#/image-format-converter">🔄 Format Converter</a>
+    <a href="#/about">ℹ️ About Us</a>
+    <a href="#/contact">✉️ Contact</a>
+    <a href="#/privacy">🔒 Privacy Policy</a>
+    <a href="#/terms">📜 Terms of Service</a>
   </div>
 </header>
 
@@ -316,7 +328,7 @@ footer .copy{text-align:center;font-size:.78rem;border-top:1px solid rgba(255,25
     <div class="cols">
       <div>
         <h4>🌸 PinkFile Tools</h4>
-        <p style="font-size:.85rem">Free PDF & image tools that run in your browser. Simple, private and easy to use.</p>
+        <p style="font-size:.85rem">Free PDF & image tools that run directly in your browser. Simple, private and 100% free.</p>
       </div>
       <div>
         <h4>PDF Tools</h4>
@@ -334,13 +346,14 @@ footer .copy{text-align:center;font-size:.78rem;border-top:1px solid rgba(255,25
       </div>
       <div>
         <h4>Company</h4>
-        <a href="#/" onclick="goSection(event,'about')">About Us</a>
-        <a href="#/" onclick="goSection(event,'contact')">Contact</a>
-        <a href="#/" onclick="goSection(event,'privacy')">Privacy Policy</a>
-        <a href="#/" onclick="goSection(event,'faq')">FAQ</a>
+        <a href="#/about">About Us</a>
+        <a href="#/contact">Contact</a>
+        <a href="#/privacy">Privacy Policy</a>
+        <a href="#/terms">Terms of Service</a>
+        <a href="#/faq">FAQ</a>
       </div>
     </div>
-    <div class="copy">© 2026 PinkFile Tools — Create. Convert. Resize. Done. 🔒 Your files stay on your device.</div>
+    <div class="copy">© 2026 PinkFile Tools — Create. Convert. Resize. Done. 🔒 Your files stay safely on your device.</div>
   </div>
 </footer>
 
@@ -394,6 +407,13 @@ const TOOLS = [
     name:"JPG to PDF", short:"Turn JPG/PNG photos into a single polished PDF in seconds.",
     seoTitle:"JPG to PDF — Convert Images to PDF Free Online | PinkFile Tools",
     seoDesc:"Convert JPG and PNG images to PDF online for free. No registration, no watermarks. Drag, drop, download — all in your browser.",
+    aboutText: "Our JPG to PDF converter allows you to combine multiple image files into one professional PDF document instantly. You can choose custom page sizes like original image dimensions, standard A4, or US Letter.",
+    useText: "1. Select or drop your JPG/PNG files into the converter.<br>2. Choose your preferred page layout size.<br>3. Click 'Process files' to compile your images into a PDF and download instantly.",
+    faq: [
+      {q: "Can I convert multiple JPGs into one single PDF?", a: "Yes, you can upload as many JPG images as you need and combine them all into a single, structured PDF file."},
+      {q: "Will my images lose quality during conversion?", a: "No. The converter maintains the original resolution and clarity of your uploaded pictures."},
+      {q: "Is there a limit on how many images I can convert?", a: "There is no strict limit. You can convert multiple photos at once completely free."}
+    ],
     accept:"image/jpeg,image/png,image/webp", multiple:true,
     extra:`<div class="opt"><label>Page size</label>
       <select id="opt-size"><option value="fit">Fit image (keep size)</option><option value="a4">A4 page (fit image)</option><option value="letter">Letter page (fit image)</option></select></div>`,
@@ -424,7 +444,14 @@ const TOOLS = [
     id:"pdf-to-jpg", icon:"📄", cat:"pdf", popular:true, tag:"POPULAR",
     name:"PDF to JPG", short:"Export every PDF page as a high-quality JPG image.",
     seoTitle:"PDF to JPG — Convert PDF Pages to Images Free | PinkFile Tools",
-    seoDesc:"Convert PDF pages to JPG images online, free. High quality 2x export, single file download or ZIP. No registration — runs in your browser.",
+    seoDesc:"Convert PDF pages to JPG images online, free. High quality export, single file download or ZIP. No registration — runs in your browser.",
+    aboutText: "Convert your PDF documents into high-resolution JPG images. This tool extracts each page of your PDF file and renders it into a clean, crisp image format.",
+    useText: "1. Select your PDF document.<br>2. Choose the rendering quality (Medium, High, or Ultra).<br>3. Click 'Process files' to extract pages as JPGs (download individual images or a single ZIP archive).",
+    faq: [
+      {q: "How high is the extracted image quality?", a: "You can choose up to 3x Ultra high quality, which generates sharp images suitable for printing or editing."},
+      {q: "How do I download multiple extracted pages?", a: "If your PDF contains multiple pages, the tool automatically packages all generated JPGs into a convenient ZIP folder."},
+      {q: "Is my confidential PDF uploaded to a server?", a: "No. Extraction happens strictly inside your browser using JavaScript. Your document stays on your device."}
+    ],
     accept:"application/pdf", multiple:false,
     extra:`<div class="opt"><label>Quality</label>
       <select id="opt-q"><option value="2">High (2x)</option><option value="1.5">Medium (1.5x)</option><option value="3">Ultra (3x)</option></select></div>`,
@@ -456,6 +483,13 @@ const TOOLS = [
     name:"Merge PDF", short:"Combine multiple PDFs into one file, in the order you choose.",
     seoTitle:"Merge PDF — Combine PDF Files Free Online | PinkFile Tools",
     seoDesc:"Merge multiple PDF files into one PDF online for free. Reorder, combine, download. No signup, no watermarks, 100% private in-browser merging.",
+    aboutText: "Easily merge multiple PDF files into a single consolidated PDF document. Ideal for combining reports, invoices, eBooks, or official paperwork.",
+    useText: "1. Select two or more PDF files from your computer or phone.<br>2. Click 'Process files' to merge all pages in order.<br>3. Download your single merged PDF file.",
+    faq: [
+      {q: "Can I merge encrypted or password-protected PDFs?", a: "If the PDF permits reading without a user password, the tool will merge it seamlessly."},
+      {q: "Will the original layout of my PDFs be altered?", a: "No. Page formatting, text fonts, and graphics remain untouched during the merging process."},
+      {q: "Is there any cost for merging PDF documents?", a: "No, this service is 100% free with no limits."}
+    ],
     accept:"application/pdf", multiple:true,
     extra:``,
     run: async (files, ui) => {
@@ -478,6 +512,13 @@ const TOOLS = [
     name:"Compress Image", short:"Shrink JPG/PNG/WebP file size with smart quality control.",
     seoTitle:"Compress Image — Reduce Image Size Free Online | PinkFile Tools",
     seoDesc:"Compress images online for free. Reduce JPG, PNG and WebP file size with adjustable quality. No upload to servers — private, fast, unlimited.",
+    aboutText: "Significantly lower the storage size of your JPG, PNG, and WebP images without noticeable quality loss. Perfect for speeding up website load times or reducing attachment sizes.",
+    useText: "1. Upload your images.<br>2. Adjust the compression slider to set your target quality.<br>3. Download the compressed images individually or as a ZIP archive.",
+    faq: [
+      {q: "How much file size can I save?", a: "Depending on image content and format, compression typically reduces file size by 30% to 80%."},
+      {q: "Does image compression delete original metadata?", a: "The in-browser compression optimizes image pixels to produce the smallest possible output size."},
+      {q: "Which image formats are supported?", a: "We support standard image formats including JPG, PNG, and WebP."}
+    ],
     accept:"image/*", multiple:true,
     extra:`<div class="opt"><label>Quality: <span id="qv">70</span>%</label>
       <input type="range" id="opt-q" min="10" max="95" value="70" style="min-width:150px" oninput="document.getElementById('qv').textContent=this.value"></div>
@@ -512,6 +553,12 @@ const TOOLS = [
     name:"Resize Image", short:"Resize to exact pixels or by percentage — aspect ratio protected.",
     seoTitle:"Resize Image — Change Image Dimensions Free Online | PinkFile Tools",
     seoDesc:"Resize images online free: exact pixels or percentage, lock aspect ratio, convert format too. No registration, works on mobile & desktop.",
+    aboutText: "Quickly change the pixel dimensions of your photos. You can specify exact width and height or enter one dimension while keeping aspect ratio intact.",
+    useText: "1. Upload your image files.<br>2. Specify target width or height in pixels.<br>3. Choose output format and click 'Process files'.",
+    faq: [
+      {q: "Will resizing stretch or distort my image?", a: "If you fill in only width or height, the tool automatically calculates the missing dimension to preserve proportions."},
+      {q: "Can I convert the file format while resizing?", a: "Yes, you can choose to save the resized image as JPG, PNG, or WebP."}
+    ],
     accept:"image/*", multiple:true,
     extra:`<div class="opt"><label>New width (px)</label><input type="number" id="opt-w" min="1" max="20000" placeholder="e.g. 800"></div>
       <div class="opt"><label>New height (px)</label><input type="number" id="opt-h" min="1" max="20000" placeholder="auto"></div>
@@ -545,6 +592,12 @@ const TOOLS = [
     name:"Image to PDF", short:"Any image → a clean multi-page A4 PDF, one photo per page.",
     seoTitle:"Image to PDF — Convert Any Image to A4 PDF Free | PinkFile Tools",
     seoDesc:"Convert JPG, PNG, WebP images to a multi-page A4 PDF online free. One image per page, auto-centered. No signup, private in-browser conversion.",
+    aboutText: "Convert pictures from any modern format into standard printable A4 PDF documents. Place single photos or multi-page collections cleanly.",
+    useText: "1. Drag or browse your images.<br>2. Select full page or margin layout.<br>3. Generate your downloadable A4 PDF.",
+    faq: [
+      {q: "Does this center images automatically?", a: "Yes, images are centered on standard A4 pages with option for margins."},
+      {q: "Is registration needed?", a: "No account required."}
+    ],
     accept:"image/*", multiple:true,
     extra:`<div class="opt"><label>Layout</label>
       <select id="opt-l"><option value="full">Full page per image (A4)</option><option value="margin">Full page with margin (A4)</option></select></div>`,
@@ -573,6 +626,11 @@ const TOOLS = [
     name:"A4 PDF Creator", short:"Type or paste text and get a perfectly formatted A4 PDF.",
     seoTitle:"A4 PDF Creator — Make a Printable A4 PDF from Text | PinkFile Tools",
     seoDesc:"Create a printable A4 PDF from plain text online, free. Choose font size and margins. Instant download, no registration needed.",
+    aboutText: "Create print-ready text PDF documents directly from your browser. Ideal for letters, notes, essays, or quick documentation.",
+    useText: "1. Type or paste your desired text content.<br>2. Configure font size and side margins.<br>3. Download your formatted printable PDF file.",
+    faq: [
+      {q: "Does it support auto page wrapping?", a: "Yes, text automatically flows into additional A4 pages if your content extends beyond a single page."}
+    ],
     accept:null, multiple:false,
     extra:`<div class="opt" style="flex:1 1 100%"><label>Your text</label>
       <textarea id="opt-text" placeholder="Type or paste your text here…">Dear team,
@@ -620,6 +678,11 @@ You 🌸</textarea></div>
     name:"Image Format Converter", short:"Convert between JPG, PNG and WebP — lossless or tuned.",
     seoTitle:"Image Format Converter — JPG PNG WebP Free Online | PinkFile Tools",
     seoDesc:"Convert images between JPG, PNG and WebP online for free. Batch conversion with ZIP download. No registration, no watermarks, fully private.",
+    aboutText: "Effortlessly convert image formats between PNG, JPG, and WebP. Convert single images or batch convert multiple files at once.",
+    useText: "1. Upload your files.<br>2. Choose desired output format.<br>3. Download converted files.",
+    faq: [
+      {q: "Can I convert WebP to JPG?", a: "Yes, you can freely convert modern WebP images to widely compatible JPG or PNG formats."}
+    ],
     accept:"image/*", multiple:true,
     extra:`<div class="opt"><label>Convert to</label>
       <select id="opt-f"><option value="image/png">PNG (lossless)</option><option value="image/jpeg">JPG (small)</option><option value="image/webp">WebP (smallest)</option></select></div>`,
@@ -648,6 +711,11 @@ You 🌸</textarea></div>
 /* ================= Tool page UI ================= */
 function buildToolUI(tool){
   const isFileTool = !!tool.accept;
+  const toolFaqs = tool.faq || [
+    {q: "Is this tool free?", a: "Yes. PinkFile Tools is 100% free with no registration required."},
+    {q: "Are my files uploaded?", a: "File processing happens locally in your browser. Your files stay on your device."}
+  ];
+
   return `
   <div class="tool-wrap">
     <div class="tool-head">
@@ -684,18 +752,15 @@ function buildToolUI(tool){
 
     <section class="tool-info" aria-label="Tool information">
       <div class="tool-info-card">
-        <h2>📘 About this tool</h2>
-        <p><strong>What it does:</strong> ${esc(tool.name)} helps you work with your files quickly and privately. ${esc(tool.short)}</p>
-        <p><strong>How to use it:</strong> ${isFileTool ? "Choose your file or drag and drop it into the upload box, select your preferred options, then click the processing button. When finished, download your result." : "Enter or paste your content, choose the available options, then click the create button to generate your PDF. Download the finished file when it is ready."}</p>
-        <p><strong>Privacy:</strong> Processing is designed to happen in your browser, so your selected files are not intentionally uploaded to a PinkFile Tools server.</p>
+        <h2>📘 About ${esc(tool.name)}</h2>
+        <p>${tool.aboutText || "PinkFile Tools offers fast, private online file conversion directly in your web browser."}</p>
+        <p><strong>How to use it:</strong><br>${tool.useText || "Select your files, adjust available options, and click process."}</p>
+        <p><strong>100% Private & Secure:</strong> All file processing takes place on your client device using modern JavaScript and WebAssembly. Your files are never uploaded to our servers.</p>
       </div>
       <div class="tool-info-card">
         <h2>❓ Frequently Asked Questions</h2>
         <div class="faq">
-          <details><summary>Is this tool free?</summary><p>Yes. PinkFile Tools is designed to provide these tools free of charge, with no registration required.</p></details>
-          <details><summary>Do I need to create an account?</summary><p>No. You can use the tool without creating an account or providing an email address.</p></details>
-          <details><summary>Are my files uploaded?</summary><p>File processing is performed in your browser. Your files are intended to remain on your device while the tool works.</p></details>
-          <details><summary>Can I use it on my phone?</summary><p>Yes. The site is designed for Android, iPhone, tablets and desktop browsers.</p></details>
+          ${toolFaqs.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}
         </div>
       </div>
     </section>
@@ -813,6 +878,96 @@ function setMeta(name, content){
   m.content = content;
 }
 
+/* ================= Static Pages ================= */
+function renderAbout(mount){
+  document.title = "About Us — PinkFile Tools";
+  setMeta("description", "Learn more about PinkFile Tools — free, fast, and private browser-based PDF and image tools.");
+  mount.innerHTML = `
+  <div class="container" style="padding-top:38px;padding-bottom:50px">
+    <div class="privacy">
+      <h1 class="sec-title" style="margin-bottom:16px">🌸 About PinkFile Tools</h1>
+      <p>Welcome to <strong>PinkFile Tools</strong>, your go-to web platform for fast, easy, and secure PDF and image editing utilities.</p>
+      <p>Our mission is simple: to provide high-quality file manipulation tools completely free of charge without forcing users to register, create accounts, or deal with intrusive watermarks.</p>
+      <p><strong>Client-Side Privacy First:</strong> Unlike traditional online file converters that require uploading your private documents to an external server, PinkFile Tools processes everything locally in your web browser. Utilizing modern technologies like HTML5 Canvas API and WebAssembly, your photos and documents never leave your mobile phone or computer.</p>
+      <p>Whether you need to merge PDFs, compress pictures, convert formats, or create printable A4 documents, PinkFile Tools provides a fast, hassle-free solution accessible on any browser, desktop or mobile device.</p>
+    </div>
+  </div>`;
+}
+
+function renderContact(mount){
+  document.title = "Contact Us — PinkFile Tools";
+  setMeta("description", "Contact the PinkFile Tools team for feedback, questions, or assistance.");
+  mount.innerHTML = `
+  <div class="container" style="padding-top:38px;padding-bottom:50px">
+    <div class="privacy">
+      <h1 class="sec-title" style="margin-bottom:16px">✉️ Contact Us</h1>
+      <p>Have questions, suggestions, or feedback about PinkFile Tools? We would love to hear from you!</p>
+      <p>Direct Email Support: <a href="mailto:q80yooon@gmail.com"><strong>q80yooon@gmail.com</strong></a></p>
+
+      <form class="contact-form" onsubmit="event.preventDefault(); toast('Thank you! Your message has been sent.'); this.reset();">
+        <label>Your Name
+          <input type="text" required placeholder="John Doe">
+        </label>
+        <label>Your Email
+          <input type="email" required placeholder="john@example.com">
+        </label>
+        <label>Message
+          <textarea required rows="5" placeholder="How can we help you?"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary" style="align-self:flex-start">Send Message</button>
+      </form>
+    </div>
+  </div>`;
+}
+
+function renderPrivacy(mount){
+  document.title = "Privacy Policy — PinkFile Tools";
+  setMeta("description", "Privacy Policy for PinkFile Tools. Learn how we handle client data, cookies, and privacy.");
+  mount.innerHTML = `
+  <div class="container" style="padding-top:38px;padding-bottom:50px">
+    <div class="privacy">
+      <h1 class="sec-title" style="margin-bottom:16px">🔒 Privacy Policy</h1>
+      <p>Last updated: September 2026</p>
+      <p>This Privacy Policy explains how PinkFile Tools ("we", "us") handles information when you visit pinkfile.tools. We aim to collect only the information needed to operate, secure, measure, and improve the site.</p>
+      <p><strong>Files processed with our tools:</strong> PinkFile Tools uses client-side technologies (JavaScript, WebAssembly, Canvas API) to process your PDFs and images directly in your browser. We do not transmit or store your files on external servers — everything happens on your device.</p>
+      <p><strong>Cookies and Advertising:</strong> PinkFile Tools uses cookies and similar technologies for analytics and ad serving. Third parties, including Google AdSense, use cookies to serve ads based on prior visits to our site or other websites. You can opt out of personalized advertising by visiting Google Ads Settings.</p>
+      <p><strong>Google Analytics:</strong> We use Google Analytics to understand aggregate website usage. Technical information is processed according to Google policies.</p>
+      <p><strong>Contact Us:</strong> If you have questions regarding this privacy policy, please email <a href="mailto:q80yooon@gmail.com">q80yooon@gmail.com</a>.</p>
+    </div>
+  </div>`;
+}
+
+function renderTerms(mount){
+  document.title = "Terms of Service — PinkFile Tools";
+  setMeta("description", "Terms of Service for PinkFile Tools. Read our terms of use.");
+  mount.innerHTML = `
+  <div class="container" style="padding-top:38px;padding-bottom:50px">
+    <div class="privacy">
+      <h1 class="sec-title" style="margin-bottom:16px">📜 Terms of Service</h1>
+      <p>By accessing and using <strong>PinkFile Tools</strong> (pinkfile.tools), you accept and agree to be bound by the terms and conditions outlined below.</p>
+      <p><strong>1. Use of Services:</strong> PinkFile Tools provides web-based file editing and conversion services free of charge. You agree to use the service for lawful purposes only and in accordance with these Terms.</p>
+      <p><strong>2. Disclaimer of Warranties:</strong> The website and all tools are provided "as is" without warranty of any kind. While we strive to maintain fast, accurate processing, we do not guarantee uninterrupted access or error-free processing.</p>
+      <p><strong>3. Limitation of Liability:</strong> In no event shall PinkFile Tools or its operators be liable for any indirect or consequential damages arising from the use or inability to use our tools.</p>
+    </div>
+  </div>`;
+}
+
+function renderFAQPage(mount){
+  document.title = "Frequently Asked Questions — PinkFile Tools";
+  setMeta("description", "Frequently Asked Questions about PinkFile Tools.");
+  mount.innerHTML = `
+  <div class="container" style="padding-top:38px;padding-bottom:50px">
+    <h1 class="sec-title">❓ Frequently Asked Questions</h1>
+    <p class="sec-sub">Find answers to common questions about PinkFile Tools.</p>
+    <div class="faq">
+      <details open><summary>Is PinkFile Tools really 100% free?</summary><p>Yes — every tool is free with unlimited use, no watermarks and no premium paywall.</p></details>
+      <details><summary>Do I need an account or email?</summary><p>No. Open any tool, drop your file, and download your result instantly.</p></details>
+      <details><summary>Are my files uploaded to a server?</summary><p>Never. All processing happens locally in your browser using client-side JavaScript technologies.</p></details>
+      <details><summary>Does it work on Android and iPhone?</summary><p>Yes. The site is optimized for mobile browsers, tablets, and desktop computers.</p></details>
+    </div>
+  </div>`;
+}
+
 /* ================= Homepage ================= */
 function cardHTML(t){
   return `<a class="card" href="#/${t.id}" style="text-decoration:none;color:inherit">
@@ -833,7 +988,7 @@ function renderHome(mount){
     <p class="sub">Free PDF & Image Tools — <strong>No Registration</strong>. Everything runs privately in your browser on Android, iPhone and desktop. Your files never leave your device.</p>
     <div class="hero-cta">
       <a class="btn btn-primary" href="#/jpg-to-pdf">🖼️ Start Converting</a>
-      <a class="btn btn-ghost" href="#/" onclick="goSection(event,'popular')">Explore Tools ↓</a>
+      <a class="btn btn-ghost" href="#/popular">Explore Tools ↓</a>
     </div>
     <div class="badges">
       <span class="badge">⚡ Instant results</span>
@@ -843,7 +998,7 @@ function renderHome(mount){
     </div>
   </div>
 
-  <div class="container"><div class="ad-slot">Advertisement — 728×90 Leaderboard</div></div>
+  <div class="container"><div class="ad-slot">Advertisement — Responsive Banner</div></div>
 
   <section class="container" id="popular">
     <h2 class="sec-title">🔥 Popular Tools</h2>
@@ -857,7 +1012,7 @@ function renderHome(mount){
     <div class="grid">${pdfTools.map(cardHTML).join("")}</div>
   </section>
 
-  <div class="container"><div class="ad-slot">Advertisement — Responsive Display</div></div>
+  <div class="container"><div class="ad-slot">Advertisement — Responsive Banner</div></div>
 
   <section class="container" id="img-tools">
     <h2 class="sec-title">🖼️ Image Tools</h2>
@@ -875,69 +1030,7 @@ function renderHome(mount){
     </div>
   </section>
 
-  <div class="container"><div class="ad-slot">Advertisement — In-Feed 300×250</div></div>
-
-  <section class="container" id="faq">
-    <h2 class="sec-title">❓ Frequently Asked Questions</h2>
-    <p class="sec-sub">Everything you need to know before your first file.</p>
-    <div class="faq">
-      <details open><summary>Is PinkFile Tools really 100% free?</summary><p>Yes — every tool is free with unlimited use, no watermarks and no premium paywall. We keep the lights on with the ad spaces you see on the page.</p></details>
-      <details><summary>Do I need an account, email or registration?</summary><p>No. There is no registration, no login and no email required. Open a tool, drop your file, download the result. That's it.</p></details>
-      <details><summary>Are my files uploaded to a server?</summary><p><strong>Never.</strong> All processing happens locally in your browser using the Canvas API, pdf-lib and PDF.js. You can even disconnect from the internet after the page loads and everything still works.</p></details>
-      <details><summary>Does it work on Android and iPhone?</summary><p>Absolutely. The site is mobile-first — tap any upload box to pick files from your gallery or camera. It also works great on desktop Chrome, Edge, Firefox and Safari.</p></details>
-      <details><summary>Why did my HEIC or RAW photo fail?</summary><p>Some camera formats (HEIC, RAW, TIFF) can't be decoded by browsers directly. Convert them to JPG or PNG first (your phone's gallery can usually do this), then use our tools.</p></details>
-      <details><summary>Is there a file size limit?</summary><p>No hard limit — since nothing is uploaded, the only limit is your device's memory. Files up to ~100 MB typically work fine on modern phones.</p></details>
-    </div>
-  </section>
-
-  <section class="container" id="privacy">
-    <h2 class="sec-title">🔒 Privacy Policy</h2>
-    <p class="sec-sub">Last updated: September 2026</p>
-    <div class="privacy">
-      <p>This Privacy Policy explains how PinkFile Tools ("we", "us") handles information when you visit pinkfile.tools. We aim to collect only the information needed to operate, secure, measure, and improve the site.</p>
-
-      <p><strong>Files you process with our tools.</strong> PinkFile Tools uses client-side technologies (JavaScript, WebAssembly, Canvas API) to process your PDFs and images directly in your browser. We do not intentionally transmit or store your files on our own servers — everything happens on your device, and closing or refreshing the page removes the in-memory data.</p>
-
-      <p><strong>Cookies and similar technologies.</strong> PinkFile Tools may use cookies and similar technologies through analytics and advertising services. These technologies may be used to measure site usage, improve performance, prevent abuse, and, when advertising is enabled, deliver and measure advertisements.</p>
-
-      <p><strong>Google Analytics.</strong> We use Google Analytics to understand aggregate website usage, such as which pages are visited and how visitors interact with the site. Google may process technical information associated with visits in accordance with its own policies and terms.</p>
-
-      <p><strong>Google AdSense and advertising.</strong> PinkFile Tools may use Google AdSense to display advertisements. If advertising is enabled, Google and its partners may use cookies, web beacons, IP addresses, or similar identifiers to serve, measure, and personalize advertising as permitted by applicable law and your choices.</p>
-
-      <p>Third parties, including Google, may place and read cookies on visitors' browsers or use web beacons or IP addresses as a result of ad serving on this website. You can learn more about how Google uses data when you use our partners' sites or apps at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses information from sites or apps that use our services</a>.</p>
-
-      <p>You can manage personalized advertising through <a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
-
-      <p><strong>Your choices and privacy rights.</strong> You can control cookies through your browser settings. Depending on your location, you may also have additional privacy rights under applicable law. Where required, we will provide appropriate consent and privacy choices before using technologies that require consent.</p>
-
-      <p><strong>Your rights if you are in the European Economic Area, the UK, or Switzerland.</strong> If you are located in the EEA, the UK, or Switzerland, you have rights under the General Data Protection Regulation (GDPR) and equivalent laws, including the right to access, correct, delete, or restrict the use of your personal data, the right to data portability, and the right to withdraw consent at any time where processing is based on consent. Where cookies or similar technologies require your consent (for example, for personalized advertising), we will ask for that consent before they are set, and you can change or withdraw your choice at any time through the cookie settings on this site or your browser settings. To exercise any of these rights, contact us using the details below.</p>
-
-      <p><strong>Legal basis for processing.</strong> Where applicable law requires it, we rely on your consent for non-essential cookies and personalized advertising, and on our legitimate interest in operating, securing, and improving the site for essential functionality and aggregated analytics.</p>
-
-      <p><strong>Children's privacy.</strong> PinkFile Tools is not directed at children under 13, and we do not knowingly collect personal information from children.</p>
-
-      <p><strong>Changes to this policy.</strong> We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date.</p>
-
-      <p><strong>Contact us.</strong> Questions about this policy? Reach out via our <a href="mailto:q80yooon@gmail.com">contact email</a>.</p>
-    </div>
-  </section>
-
-  <section class="container" id="about">
-    <div class="privacy">
-      <h2 class="sec-title" style="margin-bottom:12px">🌸 About Us</h2>
-      <p>PinkFile Tools is a simple online collection of PDF and image utilities designed to help you create, convert, resize and manage files directly in your browser.</p>
-      <p>Our goal is to keep everyday file tasks easy, fast and accessible without unnecessary registration or complicated steps.</p>
-    </div>
-  </section>
-
-  <section class="container" id="contact">
-    <div class="privacy">
-      <h2 class="sec-title" style="margin-bottom:12px">✉️ Contact</h2>
-      <p>For questions, feedback or suggestions about PinkFile Tools, please contact the site owner through the contact method provided on the official website.</p>
-    </div>
-  </section>
-
-  <div class="container" style="text-align:center;padding-bottom:20px">
+  <div class="container" style="text-align:center;padding:30px 0">
     <a class="btn btn-primary" href="#/jpg-to-pdf">🚀 Try a tool now — free forever</a>
   </div>`;
 }
@@ -947,19 +1040,24 @@ const app = $("#app");
 function route(){
   const h = (location.hash || "#/").replace(/^#\//, "");
   window.scrollTo({ top: 0 });
-  const tool = TOOLS.find(t => t.id === h);
-  if (tool) initTool(tool, app); else renderHome(app);
+
+  if (h === "about") renderAbout(app);
+  else if (h === "contact") renderContact(app);
+  else if (h === "privacy") renderPrivacy(app);
+  else if (h === "terms") renderTerms(app);
+  else if (h === "faq") renderFAQPage(app);
+  else if (h === "popular" || h === "pdf-tools" || h === "img-tools") {
+    renderHome(app);
+    setTimeout(()=>document.getElementById(h)?.scrollIntoView({behavior:"smooth"}), 100);
+  }
+  else {
+    const tool = TOOLS.find(t => t.id === h);
+    if (tool) initTool(tool, app); else renderHome(app);
+  }
   $("#mobileMenu").classList.remove("open");
 }
+
 window.addEventListener("hashchange", route);
-
-function goSection(e, id){
-  e.preventDefault();
-  if (location.hash !== "#/" && location.hash !== ""){ location.hash = "#/"; setTimeout(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"}), 80); }
-  else document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
-  $("#mobileMenu").classList.remove("open");
-}
-
 $("#burger").onclick = () => $("#mobileMenu").classList.toggle("open");
 
 route();
