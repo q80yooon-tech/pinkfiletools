@@ -12,6 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hilltopads-site-verification" content="e1b415f1e74846a2456a" />
 <title>PinkFile Tools — Free PDF & Image Tools Online | No Registration</title>
 <meta name="description" content="Free online PDF & Image tools: JPG to PDF, PDF to JPG, Merge PDF, Compress Image, Resize Image, Image to PDF, A4 PDF Creator, Image Format Converter. No registration, no login — 100% in your browser.">
 <meta name="keywords" content="jpg to pdf, pdf to jpg, merge pdf, compress image, resize image, image to pdf, a4 pdf creator, image format converter, free pdf tools">
@@ -547,401 +548,246 @@ const TOOLS = [
       }
       ui.pg(96, "Saving PDF…");
       const out = await pdf.save();
-      ui.done(new Blob([out], {type:"application/pdf"}), "pinkfile-images.pdf", files.length+" image"+(files.length>1?"s":"")+" placed on A4 pages 🎉");
-    }
-  },
-  {
-    id:"a4-pdf-creator", icon:"📝", cat:"pdf", popular:false,
-    name:"A4 PDF Creator", short:"Type or paste text and get a perfectly formatted A4 PDF.",
-    seoTitle:"A4 PDF Creator — Make a Printable A4 PDF from Text | PinkFile Tools",
-    seoDesc:"Create a printable A4 PDF from plain text online, free. Choose font size and margins. Instant download, no registration needed.",
-    accept:null, multiple:false,
-    extra:`<div class="opt" style="flex:1 1 100%"><label>Your text</label>
-      <textarea id="opt-text" placeholder="Type or paste your text here…">Dear team,
-
-This PDF was created with PinkFile Tools — free, private, and blazing fast.
-
-Best regards,
-You 🌸</textarea></div>
-      <div class="opt"><label>Font size</label><input type="number" id="opt-fs" value="12" min="8" max="48"></div>
-      <div class="opt"><label>Margins</label><select id="opt-m"><option value="60">Normal</option><option value="40">Narrow</option><option value="80">Wide</option></select></div>`,
-    run: async (files, ui) => {
-      const text = ui.val("opt-text").trim();
-      if (!text) throw new Error("Please type some text first.");
-      const fs = Math.min(48, Math.max(8, parseInt(ui.val("opt-fs")) || 12));
-      const m = parseInt(ui.val("opt-m"));
-      const { PDFDocument, StandardFonts, rgb } = PDFLib;
-      const pdf = await PDFDocument.create();
-      const font = await pdf.embedFont(StandardFonts.Helvetica);
-      const [pw, ph] = A4;
-      const lineH = fs * 1.45;
-      const maxW = pw - 2*m;
-      const words = text.split(/\s+/);
-      const lines = []; let line = "";
-      for (const w of words){
-        const t = line ? line + " " + w : w;
-        if (font.widthOfTextAtSize(t, fs) <= maxW) line = t;
-        else { if (line) lines.push(line); line = w; if (font.widthOfTextAtSize(w, fs) > maxW){ let chunk=""; for (const ch of w){ if (font.widthOfTextAtSize(chunk+ch, fs) <= maxW) chunk += ch; else { lines.push(chunk); chunk = ch; } } line = chunk; } }
-      }
-      if (line) lines.push(line);
-      const perPage = Math.floor((ph - 2*m) / lineH);
-      if (!perPage) throw new Error("Font size is too large for the page. Try a smaller size.");
-      for (let i=0; i<lines.length; i += perPage){
-        ui.pg(60, "Writing page "+(i/perPage+1)+"…");
-        const page = pdf.addPage([pw, ph]);
-        const chunk = lines.slice(i, i+perPage);
-        chunk.forEach((l, j) => page.drawText(l, { x:m, y: ph - m - fs - j*lineH, size: fs, font, color: rgb(0.15,0.08,0.12) }));
-      }
-      ui.pg(92, "Saving PDF…");
-      const out = await pdf.save();
-      ui.done(new Blob([out], {type:"application/pdf"}), "pinkfile-a4-document.pdf", "A4 PDF created ("+Math.ceil(lines.length/perPage)+" page"+(Math.ceil(lines.length/perPage)>1?"s":"")+") 🎉");
-    }
-  },
-  {
-    id:"image-format-converter", icon:"🔄", cat:"image", popular:false,
-    name:"Image Format Converter", short:"Convert between JPG, PNG and WebP — lossless or tuned.",
-    seoTitle:"Image Format Converter — JPG PNG WebP Free Online | PinkFile Tools",
-    seoDesc:"Convert images between JPG, PNG and WebP online for free. Batch conversion with ZIP download. No registration, no watermarks, fully private.",
-    accept:"image/*", multiple:true,
-    extra:`<div class="opt"><label>Convert to</label>
-      <select id="opt-f"><option value="image/png">PNG (lossless)</option><option value="image/jpeg">JPG (small)</option><option value="image/webp">WebP (smallest)</option></select></div>`,
-    run: async (files, ui) => {
-      const fmt = ui.val("opt-f");
-      const ext = { "image/png":"png", "image/webp":"webp", "image/jpeg":"jpg" }[fmt];
-      const zip = new JSZip();
-      for (let i=0;i<files.length;i++){
-        ui.pg((i/files.length)*92, "Converting "+files[i].name+"…");
-        const bmp = await fileToImage(files[i]);
-        const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height;
-        const ctx = c.getContext("2d");
-        if (fmt === "image/jpeg"){ ctx.fillStyle = "#fff"; ctx.fillRect(0,0,c.width,c.height); }
-        ctx.drawImage(bmp, 0, 0);
-        bmp.close && bmp.close();
-        const blob = await canvasToBlob(c, fmt, fmt === "image/png" ? undefined : 0.92);
-        if (files.length === 1){ ui.done(blob, files[i].name.replace(/\.[^.]+$/,"")+"."+ext, "Converted to "+ext.toUpperCase()+" 🎉"); return; }
-        zip.file(files[i].name.replace(/\.[^.]+$/,"")+"."+ext, blob);
-      }
-      ui.pg(96, "Packing ZIP…");
-      ui.done(await zip.generateAsync({type:"blob"}), "pinkfile-converted.zip", files.length+" images converted 🎉");
+      ui.done(new Blob([out], {type:"application/pdf"}), "pinkfile-images.pdf", files.length+" image"+(files.length>1?"s":"")+" converted to A4 PDF 🎉");
     }
   }
 ];
 
-function buildToolUI(tool){
-  const isFileTool = !!tool.accept;
-  return `
-  <div class="tool-wrap">
-    <div class="tool-head">
-      <div class="crumb"><a href="#/">Home</a> › ${esc(tool.name)}</div>
-      <h1>${tool.icon} ${esc(tool.name)}</h1>
-      <p>${esc(tool.short)} Free, unlimited, and 100% private — files are processed on your device.</p>
-    </div>
-    <div class="tool-card">
-      ${isFileTool ? `
-      <div class="dropzone" id="dz" role="button" tabindex="0" aria-label="Upload files">
-        <div class="dz-icon">📥</div>
-        <p>Drag & drop files here</p>
-        <small>or <span class="browse">browse your device</span>${tool.multiple ? " — you can add multiple files" : ""}</small><br>
-        <small style="display:block;margin-top:6px">📱 On mobile? Tap to choose from gallery or camera.</small>
-      </div>
-      <input type="file" id="fi" accept="${tool.accept}" ${tool.multiple ? "multiple" : ""}>
-      <div class="preview" id="pv"></div>
-      <div style="margin-top:12px;font-size:.84rem;color:var(--ink-soft)"><span id="cnt">No files yet</span></div>
-      ` : ""}
-      <div class="opts">${tool.extra || ""}</div>
-      <div class="progress" id="pg"><div class="bar" id="bar"></div></div>
-      <div id="pglbl" style="font-size:.84rem;color:var(--ink-soft);min-height:1.2em"></div>
-      <button class="btn btn-primary btn-run" id="run">▶ ${isFileTool ? "Process files" : "Create PDF"}</button>
-      <div class="error" id="err"></div>
-      <div class="result" id="res">
-        <div class="ok">✅</div>
-        <p id="resmsg"></p>
-        <div class="row">
-          <a class="btn btn-primary" id="dl" download>⬇️ Download result</a>
-          <button class="btn btn-again" id="again">🔄 Start Again</button>
-        </div>
-      </div>
-    </div>
+function route(){
+  const hash = location.hash || "#/";
+  const tool = TOOLS.find(t => "#/" + t.id === hash);
+  if (tool) renderTool(tool); else renderHome();
+}
 
-    <section class="tool-info" aria-label="Tool information">
-      <div class="tool-info-card">
-        <h2>📘 About this tool</h2>
-        <p><strong>What it does:</strong> ${esc(tool.name)} helps you work with your files quickly and privately. ${esc(tool.short)}</p>
-        <p><strong>How to use it:</strong> ${isFileTool ? "Choose your file or drag and drop it into the upload box, select your preferred options, then click the processing button. When finished, download your result." : "Enter or paste your content, choose the available options, then click the create button to generate your PDF. Download the finished file when it is ready."}</p>
-        <p><strong>Privacy:</strong> Processing is designed to happen in your browser, so your selected files are not intentionally uploaded to a PinkFile Tools server.</p>
+function renderHome(){
+  document.title = "PinkFile Tools — Free PDF & Image Tools Online | No Registration";
+  const app = $("#app");
+  app.innerHTML = `
+    <section class="hero container">
+      <span class="pill">🌸 100% FREE • NO REGISTRATION • PRIVATE</span>
+      <h1>Free PDF & Image Tools <br><span class="grad">Right in Your Browser</span></h1>
+      <p class="sub">Convert, compress, merge and resize your files without uploading them to any server. Fast, safe and always private.</p>
+      <div class="hero-cta">
+        <a href="#/jpg-to-pdf" class="btn btn-primary">🖼️ JPG to PDF</a>
+        <a href="#/pdf-to-jpg" class="btn btn-ghost">📄 PDF to JPG</a>
+        <a href="#/compress-image" class="btn btn-ghost">🗜️ Compress Image</a>
       </div>
-      <div class="tool-info-card">
-        <h2>❓ Frequently Asked Questions</h2>
-        <div class="faq">
-          <details><summary>Is this tool free?</summary><p>Yes. PinkFile Tools is designed to provide these tools free of charge, with no registration required.</p></details>
-          <details><summary>Do I need to create an account?</summary><p>No. You can use the tool without creating an account or providing an email address.</p></details>
-          <details><summary>Are my files uploaded?</summary><p>File processing is performed in your browser. Your files are intended to remain on your device while the tool works.</p></details>
-          <details><summary>Can I use it on my phone?</summary><p>Yes. The site is designed for Android, iPhone, tablets and desktop browsers.</p></details>
-        </div>
+      <div class="badges">
+        <span class="badge">🔒 Files Stay Local</span>
+        <span class="badge">⚡ Instant Conversion</span>
+        <span class="badge">📱 Works Mobile & Desktop</span>
+        <span class="badge">✨ No Watermarks</span>
       </div>
     </section>
 
-    <div class="related">
-      <h2>🧰 Related free tools</h2>
-      <div class="grid" id="rel"></div>
-    </div>
-  </div>`;
+    <div class="ad-slot container">Ad Space</div>
+
+    <section id="popular" class="container">
+      <h2 class="sec-title">Popular Tools</h2>
+      <p class="sec-sub">Our most used free utilities</p>
+      <div class="grid">
+        ${TOOLS.filter(t => t.popular).map(t => `
+          <a href="#/${t.id}" class="card">
+            ${t.tag ? `<span class="tag">${t.tag}</span>` : ''}
+            <div class="icon">${t.icon}</div>
+            <h3>${esc(t.name)}</h3>
+            <p>${esc(t.short)}</p>
+            <span class="go">Open Tool →</span>
+          </a>
+        `).join('')}
+      </div>
+    </section>
+
+    <section id="pdf-tools" class="container">
+      <h2 class="sec-title">PDF Tools</h2>
+      <p class="sec-sub">Convert and merge PDF files</p>
+      <div class="grid">
+        ${TOOLS.filter(t => t.cat === 'pdf').map(t => `
+          <a href="#/${t.id}" class="card">
+            <div class="icon">${t.icon}</div>
+            <h3>${esc(t.name)}</h3>
+            <p>${esc(t.short)}</p>
+            <span class="go">Open Tool →</span>
+          </a>
+        `).join('')}
+      </div>
+    </section>
+
+    <section id="img-tools" class="container">
+      <h2 class="sec-title">Image Tools</h2>
+      <p class="sec-sub">Resize, compress and optimize photos</p>
+      <div class="grid">
+        ${TOOLS.filter(t => t.cat === 'image').map(t => `
+          <a href="#/${t.id}" class="card">
+            <div class="icon">${t.icon}</div>
+            <h3>${esc(t.name)}</h3>
+            <p>${esc(t.short)}</p>
+            <span class="go">Open Tool →</span>
+          </a>
+        `).join('')}
+      </div>
+    </section>
+
+    <section id="faq" class="container faq">
+      <h2 class="sec-title">Frequently Asked Questions</h2>
+      <p class="sec-sub">Everything you need to know about PinkFile Tools</p>
+      <details>
+        <summary>Is PinkFile Tools really free?</summary>
+        <p>Yes! Every single tool is 100% free to use with no limits, no watermarks, and no hidden fees.</p>
+      </details>
+      <details>
+        <summary>Are my files uploaded to your server?</summary>
+        <p>No. All file processing is performed locally inside your browser using WebAssembly and standard browser APIs. Your files never leave your device.</p>
+      </details>
+      <details>
+        <summary>Do I need to sign up or create an account?</summary>
+        <p>Never. There is no login, registration or email required. Just pick a tool, process your files, and download the result.</p>
+      </details>
+    </section>
+  `;
+  window.scrollTo(0,0);
 }
 
-function initTool(tool, mount){
-  mount.innerHTML = buildToolUI(tool);
+function renderTool(tool){
   document.title = tool.seoTitle;
-  setMeta("description", tool.seoDesc);
-  $("#rel", mount).innerHTML = TOOLS.filter(t => t.id !== tool.id).slice(0,4)
-    .map(t => `<a class="card" href="#/${t.id}" style="text-decoration:none;color:inherit">
-      <div class="icon">${t.icon}</div><h3>${esc(t.name)}</h3><p>${esc(t.short)}</p><span class="go">Open tool →</span></a>`).join("");
+  const app = $("#app");
+  app.innerHTML = `
+    <div class="container tool-wrap">
+      <div class="tool-head">
+        <div class="crumb"><a href="#/">Home</a> / ${esc(tool.name)}</div>
+        <h1>${tool.icon} ${esc(tool.name)}</h1>
+        <p>${esc(tool.short)}</p>
+      </div>
 
-  const state = { files: [] };
-  const dz = $("#dz", mount), fi = $("#fi", mount), pv = $("#pv", mount),
-        cnt = $("#cnt", mount), pg = $("#pg", mount), bar = $("#bar", mount),
-        pglbl = $("#pglbl", mount), runBtn = $("#run", mount), err = $("#err", mount),
-        res = $("#res", mount);
+      <div class="tool-card">
+        <div class="dropzone" id="dz">
+          <div class="dz-icon">${tool.icon}</div>
+          <p>Drag & drop files here or <span class="browse">browse</span></p>
+          <small>Supports: ${tool.accept}</small>
+          <input type="file" id="fi" ${tool.multiple ? "multiple" : ""} accept="${tool.accept}">
+        </div>
 
-  const ui = {
-    val: id => { const e = document.getElementById(id); return e ? e.value : ""; },
-    pg: (pct, msg) => { pg.classList.add("show"); bar.style.width = Math.min(100,pct)+"%"; pglbl.textContent = msg || ""; },
-    done: (blob, filename, msg) => {
-      bar.style.width = "100%"; pglbl.textContent = "";
-      const url = URL.createObjectURL(blob);
-      const dl = $("#dl", mount); dl.href = url; dl.download = filename;
-      $("#resmsg", mount).textContent = msg + " (" + fmtBytes(blob.size) + ")";
-      res.classList.add("show");
-      dl.onclick = () => toast("Downloading " + filename + "…");
-    }
+        <div class="preview" id="pv"></div>
+
+        <div class="opts">
+          ${tool.extra || ''}
+        </div>
+
+        <div class="progress" id="pg"><div class="bar" id="pgb"></div></div>
+        <div class="error" id="err"></div>
+
+        <button class="btn btn-primary btn-run" id="btnRun" disabled>Process Files</button>
+
+        <div class="result" id="res">
+          <div class="ok">🎉</div>
+          <p id="resMsg">Done!</p>
+          <div class="row">
+            <button class="btn btn-primary" id="btnDl">Download File</button>
+            <button class="btn btn-again" id="btnAgain">Process More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  let selectedFiles = [];
+  let outputBlob = null;
+  let outputName = "result";
+
+  const dz = $("#dz"), fi = $("#fi"), pv = $("#pv"), btnRun = $("#btnRun");
+  const pg = $("#pg"), pgb = $("#pgb"), err = $("#err"), res = $("#res");
+
+  dz.onclick = () => fi.click();
+  dz.ondragover = e => { e.preventDefault(); dz.classList.add("over"); };
+  dz.ondragleave = () => dz.classList.remove("over");
+  dz.ondrop = e => {
+    e.preventDefault(); dz.classList.remove("over");
+    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
   };
+  fi.onchange = () => { if (fi.files.length) handleFiles(fi.files); };
 
-  function showErr(msg){ err.textContent = "⚠️ " + msg; err.classList.add("show"); }
-  function clearErr(){ err.classList.remove("show"); }
+  function handleFiles(files){
+    selectedFiles = tool.multiple ? [...selectedFiles, ...files] : [files[0]];
+    renderThumbs();
+  }
 
-  function renderPreview(){
+  function renderThumbs(){
     pv.innerHTML = "";
-    state.files.forEach((f, i) => {
-      const d = document.createElement("div"); d.className = "thumb";
-      if (f.type.startsWith("image/")){
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(f);
-        img.onload = () => URL.revokeObjectURL(img.src);
-        d.appendChild(img);
-      } else {
-        const cv = document.createElement("canvas");
-        const draw = (txt) => { cv.width = cv.height = 172; const x = cv.getContext("2d"); x.fillStyle="#ffe3ee"; x.fillRect(0,0,172,172); x.fillStyle="#d81b60"; x.font="bold 44px Arial"; x.textAlign="center"; x.fillText(txt,86,100); };
-        draw("PDF");
-        d.appendChild(cv);
-      }
-      const lbl = document.createElement("div"); lbl.className = "lbl"; lbl.textContent = f.name; d.appendChild(lbl);
-      const rm = document.createElement("button"); rm.className = "rm"; rm.textContent = "×"; rm.title = "Remove";
-      rm.onclick = (e) => { e.stopPropagation(); state.files.splice(i,1); renderPreview(); };
-      d.appendChild(rm);
-      pv.appendChild(d);
+    selectedFiles.forEach((f, idx) => {
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+      thumb.innerHTML = `<span class="lbl">${esc(f.name)}</span><button class="rm" data-i="${idx}">×</button>`;
+      pv.appendChild(thumb);
     });
-    cnt.textContent = state.files.length ? state.files.length + " file(s) • " + fmtBytes(state.files.reduce((a,f)=>a+f.size,0)) : "No files yet";
+    $$(".rm", pv).forEach(b => b.onclick = (e) => {
+      e.stopPropagation();
+      const i = parseInt(b.dataset.i);
+      selectedFiles.splice(i, 1);
+      renderThumbs();
+    });
+    btnRun.disabled = selectedFiles.length === 0;
+    res.classList.remove("show");
+    err.classList.remove("show");
   }
 
-  function addFiles(list){
-    clearErr(); res.classList.remove("show");
-    const arr = [...list];
-    const bad = arr.filter(f => tool.accept && !tool.accept.split(",").some(a => f.type === a || (a.endsWith("/*") && f.type.startsWith(a.slice(0,-1)))));
-    if (bad.length) showErr("Skipped unsupported: " + bad.map(b=>b.name).join(", ") + ". " + (tool.id === "pdf-to-jpg" || tool.id === "merge-pdf" ? "This tool only accepts PDF files." : "Try JPG, PNG or WebP."));
-    const good = arr.filter(f => !bad.includes(f));
-    state.files = tool.multiple ? state.files.concat(good) : good.slice(0,1);
-    renderPreview();
-    if (good.length) toast("Added " + good.length + " file(s) ✨");
-  }
+  btnRun.onclick = async () => {
+    btnRun.disabled = true;
+    err.classList.remove("show");
+    pg.classList.add("show");
+    pgb.style.width = "5%";
 
-  if (dz){
-    dz.onclick = () => fi.click();
-    dz.onkeydown = e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); fi.click(); } };
-    fi.onchange = () => { addFiles(fi.files); fi.value = ""; };
-    ["dragenter","dragover"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("over"); }));
-    ["dragleave","drop"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove("over"); }));
-    dz.addEventListener("drop", e => addFiles(e.dataTransfer.files));
-  }
+    const ui = {
+      val: id => $("#"+id) ? $("#"+id).value : "",
+      pg: (pct, msg) => { pgb.style.width = pct + "%"; },
+      done: (blob, filename, msg) => {
+        outputBlob = blob;
+        outputName = filename;
+        pg.classList.remove("show");
+        res.classList.add("show");
+        $("#resMsg").textContent = msg;
+        btnRun.disabled = false;
+      }
+    };
 
-  $("#again", mount).onclick = () => {
-    state.files = []; renderPreview(); res.classList.remove("show");
-    pg.classList.remove("show"); bar.style.width = "0%"; pglbl.textContent = ""; clearErr();
-    runBtn.disabled = false;
-    const t = document.getElementById("opt-text"); if (t) t.focus();
-    toast("Ready to go again 🌸");
-  };
-
-  runBtn.onclick = async () => {
-    if (tool.accept && !state.files.length){ showErr("Please add at least one file first — tap the box above to browse or drag files in."); return; }
-    clearErr(); res.classList.remove("show");
-    runBtn.disabled = true; runBtn.textContent = "⏳ Working…";
     try {
-      await tool.run(state.files, ui);
-      toast("Done! Your download should start shortly ✨");
-    } catch (e) {
-      console.error(e);
-      showErr(e.message || "Something went wrong while processing. Please try a different file.");
+      await tool.run(selectedFiles, ui);
+    } catch(e){
       pg.classList.remove("show");
-    } finally {
-      runBtn.disabled = false;
-      runBtn.innerHTML = "▶ " + (tool.accept ? "Process files" : "Create PDF");
+      err.textContent = e.message || "An error occurred during processing.";
+      err.classList.add("show");
+      btnRun.disabled = false;
     }
   };
+
+  $("#btnDl").onclick = () => {
+    if (outputBlob) downloadBlob(outputBlob, outputName);
+  };
+  $("#btnAgain").onclick = () => {
+    selectedFiles = [];
+    renderThumbs();
+  };
+
+  window.scrollTo(0,0);
 }
-
-function setMeta(name, content){
-  let m = document.querySelector('meta[name="'+name+'"]');
-  if (!m){ m = document.createElement("meta"); m.name = name; document.head.appendChild(m); }
-  m.content = content;
-}
-
-function cardHTML(t){
-  return `<a class="card" href="#/${t.id}" style="text-decoration:none;color:inherit">
-    ${t.tag ? '<span class="tag">'+t.tag+'</span>' : ''}
-    <div class="icon">${t.icon}</div><h3>${esc(t.name)}</h3><p>${esc(t.short)}</p><span class="go">Use tool — it's free →</span></a>`;
-}
-
-function renderHome(mount){
-  document.title = "PinkFile Tools — Free PDF & Image Tools Online | No Registration";
-  setMeta("description", "Free online PDF & Image tools: JPG to PDF, PDF to JPG, Merge PDF, Compress Image, Resize Image, Image to PDF, A4 PDF Creator, Image Format Converter. No registration required.");
-  const popular = TOOLS.filter(t => t.popular);
-  const pdfTools = TOOLS.filter(t => t.cat === "pdf");
-  const imgTools = TOOLS.filter(t => t.cat === "image");
-  mount.innerHTML = `
-  <div class="hero container">
-    <span class="pill">🔒 100% Free · No Registration · No Uploads</span>
-    <h1>Create. <span class="grad">Convert.</span> Resize.<br><span class="grad">Done.</span></h1>
-    <p class="sub">Free PDF & Image Tools — <strong>No Registration</strong>. Everything runs privately in your browser on Android, iPhone and desktop. Your files never leave your device.</p>
-    <div class="hero-cta">
-      <a class="btn btn-primary" href="#/jpg-to-pdf">🖼️ Start Converting</a>
-      <a class="btn btn-ghost" href="#/" onclick="goSection(event,'popular')">Explore Tools ↓</a>
-    </div>
-    <div class="badges">
-      <span class="badge">⚡ Instant results</span>
-      <span class="badge">🚫 No watermarks</span>
-      <span class="badge">📱 Mobile friendly</span>
-      <span class="badge">♾️ Unlimited use</span>
-    </div>
-  </div>
-
-  <div class="container"><div class="ad-slot">Advertisement — 728×90 Leaderboard</div></div>
-
-  <section class="container" id="popular">
-    <h2 class="sec-title">🔥 Popular Tools</h2>
-    <p class="sec-sub">Loved by thousands of users every day — pick one and finish in seconds.</p>
-    <div class="grid">${popular.map(cardHTML).join("")}</div>
-  </section>
-
-  <section class="container" id="pdf-tools">
-    <h2 class="sec-title">📄 PDF Tools</h2>
-    <p class="sec-sub">Create, convert and combine PDFs — free, fast and private.</p>
-    <div class="grid">${pdfTools.map(cardHTML).join("")}</div>
-  </section>
-
-  <div class="container"><div class="ad-slot">Advertisement — Responsive Display</div></div>
-
-  <section class="container" id="img-tools">
-    <h2 class="sec-title">🖼️ Image Tools</h2>
-    <p class="sec-sub">Compress, resize and convert images without losing quality.</p>
-    <div class="grid">${imgTools.map(cardHTML).join("")}</div>
-  </section>
-
-  <section class="container" id="how">
-    <h2 class="sec-title">⚙️ How It Works</h2>
-    <p class="sec-sub">Three steps. Zero signup. Zero waiting.</p>
-    <div class="steps">
-      <div class="step"><div class="num">1</div><h3>Drop your files</h3><p>Drag & drop, or tap to browse from your phone gallery, camera or computer.</p></div>
-      <div class="step"><div class="num">2</div><h3>We process instantly</h3><p>Magic happens on <em>your</em> device using your browser — nothing is uploaded anywhere.</p></div>
-      <div class="step"><div class="num">3</div><h3>Download & done</h3><p>Grab your PDF or image in one tap. No watermarks, no email gates, no limits.</p></div>
-    </div>
-  </section>
-
-  <div class="container"><div class="ad-slot">Advertisement — In-Feed 300×250</div></div>
-
-  <section class="container" id="faq">
-    <h2 class="sec-title">❓ Frequently Asked Questions</h2>
-    <p class="sec-sub">Everything you need to know before your first file.</p>
-    <div class="faq">
-      <details open><summary>Is PinkFile Tools really 100% free?</summary><p>Yes — every tool is free with unlimited use, no watermarks and no premium paywall. We keep the lights on with the ad spaces you see on the page.</p></details>
-      <details><summary>Do I need an account, email or registration?</summary><p>No. There is no registration, no login and no email required. Open a tool, drop your file, download the result. That's it.</p></details>
-      <details><summary>Are my files uploaded to a server?</summary><p><strong>Never.</strong> All processing happens locally in your browser using the Canvas API, pdf-lib and PDF.js. You can even disconnect from the internet after the page loads and everything still works.</p></details>
-      <details><summary>Does it work on Android and iPhone?</summary><p>Absolutely. The site is mobile-first — tap any upload box to pick files from your gallery or camera. It also works great on desktop Chrome, Edge, Firefox and Safari.</p></details>
-      <details><summary>Why did my HEIC or RAW photo fail?</summary><p>Some camera formats (HEIC, RAW, TIFF) can't be decoded by browsers directly. Convert them to JPG or PNG first (your phone's gallery can usually do this), then use our tools.</p></details>
-      <details><summary>Is there a file size limit?</summary><p>No hard limit — since nothing is uploaded, the only limit is your device's memory. Files up to ~100 MB typically work fine on modern phones.</p></details>
-    </div>
-  </section>
-
-  <section class="container" id="privacy">
-    <h2 class="sec-title">🔒 Privacy Policy</h2>
-    <p class="sec-sub">Last updated: September 2026</p>
-    <div class="privacy">
-      <p>This Privacy Policy explains how PinkFile Tools ("we", "us") handles information when you visit pinkfile.tools. We aim to collect only the information needed to operate, secure, measure, and improve the site.</p>
-
-      <p><strong>Files you process with our tools.</strong> PinkFile Tools uses client-side technologies (JavaScript, WebAssembly, Canvas API) to process your PDFs and images directly in your browser. We do not intentionally transmit or store your files on our own servers — everything happens on your device, and closing or refreshing the page removes the in-memory data.</p>
-
-      <p><strong>Cookies and similar technologies.</strong> PinkFile Tools may use cookies and similar technologies through analytics and advertising services. These technologies may be used to measure site usage, improve performance, prevent abuse, and, when advertising is enabled, deliver and measure advertisements.</p>
-
-      <p><strong>Google Analytics.</strong> We use Google Analytics to understand aggregate website usage, such as which pages are visited and how visitors interact with the site. Google may process technical information associated with visits in accordance with its own policies and terms.</p>
-
-      <p><strong>Google AdSense and advertising.</strong> PinkFile Tools may use Google AdSense to display advertisements. If advertising is enabled, Google and its partners may use cookies, web beacons, IP addresses, or similar identifiers to serve, measure, and personalize advertising as permitted by applicable law and your choices.</p>
-
-      <p>Third parties, including Google, may place and read cookies on visitors' browsers or use web beacons or IP addresses as a result of ad serving on this website. You can learn more about how Google uses data when you use our partners' sites or apps at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses information from sites or apps that use our services</a>.</p>
-
-      <p>You can manage personalized advertising through <a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
-
-      <p><strong>Your choices and privacy rights.</strong> You can control cookies through your browser settings. Depending on your location, you may also have additional privacy rights under applicable law. Where required, we will provide appropriate consent and privacy choices before using technologies that require consent.</p>
-
-      <p><strong>Your rights if you are in the European Economic Area, the UK, or Switzerland.</strong> If you are located in the EEA, the UK, or Switzerland, you have rights under the General Data Protection Regulation (GDPR) and equivalent laws, including the right to access, correct, delete, or restrict the use of your personal data, the right to data portability, and the right to withdraw consent at any time where processing is based on consent. Where cookies or similar technologies require your consent (for example, for personalized advertising), we will ask for that consent before they are set, and you can change or withdraw your choice at any time through the cookie settings on this site or your browser settings. To exercise any of these rights, contact us using the details below.</p>
-
-      <p><strong>Legal basis for processing.</strong> Where applicable law requires it, we rely on your consent for non-essential cookies and personalized advertising, and on our legitimate interest in operating, securing, and improving the site for essential functionality and aggregated analytics.</p>
-
-      <p><strong>Children's privacy.</strong> PinkFile Tools is not directed at children under 13, and we do not knowingly collect personal information from children.</p>
-
-      <p><strong>Changes to this policy.</strong> We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date.</p>
-
-      <p><strong>Contact us.</strong> Questions about this policy? Reach out via our <a href="mailto:q80yooon@gmail.com">contact email</a>.</p>
-    </div>
-  </section>
-
-  <section class="container" id="about">
-    <div class="privacy">
-      <h2 class="sec-title" style="margin-bottom:12px">🌸 About Us</h2>
-      <p>PinkFile Tools is a simple online collection of PDF and image utilities designed to help you create, convert, resize and manage files directly in your browser.</p>
-      <p>Our goal is to keep everyday file tasks easy, fast and accessible without unnecessary registration or complicated steps.</p>
-    </div>
-  </section>
-
-  <section class="container" id="contact">
-    <div class="privacy">
-      <h2 class="sec-title" style="margin-bottom:12px">✉️ Contact</h2>
-      <p>For questions, feedback or suggestions about PinkFile Tools, please contact the site owner through the contact method provided on the official website.</p>
-    </div>
-  </section>
-
-  <div class="container" style="text-align:center;padding-bottom:20px">
-    <a class="btn btn-primary" href="#/jpg-to-pdf">🚀 Try a tool now — free forever</a>
-  </div>`;
-}
-
-const app = $("#app");
-function route(){
-  const h = (location.hash || "#/").replace(/^#\//, "");
-  window.scrollTo({ top: 0 });
-  const tool = TOOLS.find(t => t.id === h);
-  if (tool) initTool(tool, app); else renderHome(app);
-  $("#mobileMenu").classList.remove("open");
-}
-window.addEventListener("hashchange", route);
 
 function goSection(e, id){
   e.preventDefault();
-  if (location.hash !== "#/" && location.hash !== ""){ location.hash = "#/"; setTimeout(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"}), 80); }
-  else document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
-  $("#mobileMenu").classList.remove("open");
+  if (location.hash !== "#/" && location.hash !== "") {
+    location.hash = "#/";
+    setTimeout(() => scrollToSec(id), 100);
+  } else {
+    scrollToSec(id);
+  }
+}
+
+function scrollToSec(id){
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
 $("#burger").onclick = () => $("#mobileMenu").classList.toggle("open");
-
-route();
+window.addEventListener("hashchange", route);
+window.addEventListener("DOMContentLoaded", route);
 </script>
 </body>
 </html>
